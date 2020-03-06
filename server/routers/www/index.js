@@ -3,8 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const common = require('../../libs/common');
 const static = require('koa-static');
-const request = require('request');
+
 const https=require("https");
+const requestIp = require('request-ip');
 let router = new Router();
 var loction = 'aaa' ;
 
@@ -15,7 +16,10 @@ router.get('', async ctx=>{
       });
 
 
-https.get("https://apis.map.qq.com/ws/location/v1/ip?key=UGNBZ-AIR6D-2DV4Y-HVIHB-JI4OK-XBBCK",function(data){
+
+
+
+https.get(`https://apis.map.qq.com/ws/location/v1/ip?ip=${requestIp.getClientIp(ctx.req)}&key=UGNBZ-AIR6D-2DV4Y-HVIHB-JI4OK-XBBCK`,function(data){
     var str="";
     data.on("data",function(chunk){
         str+=chunk;//监听数据响应，拼接数据片段
@@ -23,11 +27,10 @@ https.get("https://apis.map.qq.com/ws/location/v1/ip?key=UGNBZ-AIR6D-2DV4Y-HVIHB
      data.on("end",function(){
          var  loc = JSON.parse(str.toString());
           loction = loc.result.ad_info.city +loc.result.ad_info.district;
-          
+           
           
     })
 })
-
 
   
 
